@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sensor and LED Matrix Control</title>
+    <script src="jquery-3.4.1.min.js"></script>
+    <script>
+        const xd = {
+            "sensors": ["LPS25h", "LSM9DS1", "HTS221"],
+            "roll": 40,
+            "pitch": 90,
+            "yaw": 20,
+            "rpyUnit": "deg",
+            "pressure": 1023,
+            "temperature": 28,
+            "humidity": 50,
+            "pressureUnit": "hPa",
+            "temperatureUnit": "C",
+            "humidityUnit": "%"
+        };
+
+        $(function(){
+            $("body").append('<div id="roll_pitch_yaw"></div>');
+            $("body").append('<div id="temperature"></div>');
+            $("body").append('<div id="humidity"></div>');
+            $("body").append('<div id="pressure"></div>');
+
+            $("body").append('<select id="rpyUnit"><option value="deg">deg</option><option value="rad">rad</option></select>');
+            $("body").append('<select id="temperatureUnit"><option value="C">C</option><option value="F">F</option></select>');
+            $("body").append('<select id="humidityUnit"><option value="%">%</option><option value="num">num</option></select>');
+            $("body").append('<select id="pressureUnit"><option value="hPa">hPa</option><option value="mmHg">mmHg</option></select>');
+
+            // Function to update sensor data
+            function updateSensorData() {
+                var sensorData = xd;
+
+                $('#roll_pitch_yaw').html('Roll: ' + sensorData.roll + ', Pitch: ' + sensorData.pitch + ', Yaw: ' + sensorData.yaw);
+                $('#temperature').html('Temperature: ' + sensorData.temperature + ' ' + sensorData.temperatureUnit);
+                $('#humidity').html('Humidity: ' + sensorData.humidity + ' ' + sensorData.humidityUnit);
+                $('#pressure').html('Pressure: ' + sensorData.pressure + ' ' + sensorData.pressureUnit);
+            }
+
+            updateSensorData();
+
+        });
+    </script>
+</head>
+<body>
+</body>
+</html>

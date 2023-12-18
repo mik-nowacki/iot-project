@@ -1,0 +1,55 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sensor and LED Matrix Control</title>
+    <script src="jquery-3.4.1.min.js"></script>
+    <script>
+        $(function(){
+            function updateSensorDataWithUnits() {
+                var rpyUnit = $('#rpyUnit').val();
+                var temperatureUnit = $('#temperatureUnit').val();
+                var humidityUnit = $('#humidityUnit').val();
+                var pressureUnit = $('#pressureUnit').val();
+
+                $.ajax({
+                    url: 'http://192.168.1.161:8080/sensor.php', 
+                    method: 'POST',
+                    data: {
+                        rpyUnit: rpyUnit,
+                        temperatureUnit: temperatureUnit,
+                        humidityUnit: humidityUnit,
+                        pressureUnit: pressureUnit
+                    },
+                    success: function(response) {
+                        var sensorData = JSON.parse(response);
+                        $('#roll_pitch_yaw').html('Roll: ' + sensorData.roll + ', Pitch: ' + sensorData.pitch + ', Yaw: ' + sensorData.yaw);
+                        $('#temperature').html('Temperature: ' + sensorData.temperature);
+                        $('#humidity').html('Humidity: ' + sensorData.humidity);
+                        $('#pressure').html('Pressure: ' + sensorData.pressure);
+                    }
+                });
+            }
+
+            $("body").append('<div id="roll_pitch_yaw"></div>');
+            $("body").append('<div id="temperature"></div>');
+            $("body").append('<div id="humidity"></div>');
+            $("body").append('<div id="pressure"></div>');
+
+            $("body").append('<select id="rpyUnit"><option value="deg">deg</option><option value="rad">rad</option></select>');
+            $("body").append('<select id="temperatureUnit"><option value="C">C</option><option value="F">F</option></select>');
+            $("body").append('<select id="humidityUnit"><option value="%">%</option><option value="num">num</option></select>');
+            $("body").append('<select id="pressureUnit"><option value="hPa">hPa</option><option value="mmHg">mmHg</option></select>');
+
+            $('#rpyUnit, #temperatureUnit, #humidityUnit, #pressureUnit').on('change', updateSensorDataWithUnits);
+
+            updateSensorDataWithUnits();
+
+        });
+    </script>
+</head>
+<body>
+</body>
+</html>
