@@ -3,13 +3,6 @@ import argparse
 from json import dumps
 from sense_hat import SenseHat
 
-class args:
-    this.x = 0
-    this.y = 0
-    this.R = 0
-    this.G = 0
-    this.B = 0
-    this.C = 0
 
 def main():
     sense = SenseHat()
@@ -25,12 +18,12 @@ def main():
     parse_args = parser.parse_args()
     args = args()
     results = {}
-    args.x = int(parse_args.x)
-    args.y = int(parse_args.y)
-    args.R = int(parse_args.R)
-    args.G = int(parse_args.G)
-    args.B = int(parse_args.B)
-    args.C = int(parse_args.C)
+    x = int(parse_args.x)
+    y = int(parse_args.y)
+    R = int(parse_args.R)
+    G = int(parse_args.G)
+    B = int(parse_args.B)
+    C = int(parse_args.C)
 
     if C:
         sense.clear()
