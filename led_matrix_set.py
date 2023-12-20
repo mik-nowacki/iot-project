@@ -1,7 +1,7 @@
-# @author  Dominik Luczak
 import argparse
 from json import dumps
 from sense_emu import SenseHat
+# from sense_hat import SenseHat
 
 sense = SenseHat()
 

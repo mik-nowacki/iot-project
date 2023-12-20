@@ -12,6 +12,7 @@
           // var sensorUrl = 'http://192.168.1.161:8080/sensor.php';
           var url = 'http://localhost:8080/led_matrix.php';
           var sensorUrl = 'http://localhost:8080/sensor.php';
+          var mockData = '{"sensors": ["LPS25h", "LSM9DS1", "HTS221"], "roll": 40, "pitch": 90, "yaw": 20, "rpyUnit": "deg", "pressure": 1023, "temperature": 28, "humidity": 50, "pressureUnit": "hPa", "temperatureUnit": "C", "humidityUnit": "%"}';
           // $('body').html('HTTP get request in background url='+url);    
           // Make HTTP request for IoT device description
           $.get(url, function(data, status){
@@ -54,7 +55,8 @@
 
               function fetchSensorData() {
                 $.get(sensorUrl, function(data) {
-                    var sensorData = JSON.parse(data);
+                    var sensorData = JSON.parse(mockData);
+                    // var sensorData = JSON.parse(data); // real rPi
 
 
                     $('#roll_pitch_yaw').html('Roll: ' + sensorData.roll + ', Pitch: ' + sensorData.pitch + ', Yaw: ' + sensorData.yaw);
@@ -83,7 +85,8 @@
                         H: humidityUnit,
                         P: pressureUnit
                     }).done(function(data, status){
-                        var sensorData = JSON.parse(data);
+                        var sensorData = JSON.parse(mockData);
+                        // var sensorData = JSON.parse(data); // real rPi
                         $('#roll_pitch_yaw').html('Roll: ' + sensorData.roll + ', Pitch: ' + sensorData.pitch + ', Yaw: ' + sensorData.yaw);
                         $('#temperature').html('Temperature: ' + sensorData.temperature);
                         $('#humidity').html('Humidity: ' + sensorData.humidity);
