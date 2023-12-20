@@ -1,10 +1,11 @@
 import argparse
 import json
-from sense_hat import SenseHat
+from sense_emu import SenseHat
 import math
 
 
-# sense = SenseHat()
+sense = SenseHat()
+
 parser = argparse.ArgumentParser(description='SenseHat sensors CLI client.')
 
 # RPY values
@@ -34,35 +35,38 @@ results['sensors'] = ['LPS25h', 'LSM9DS1', 'HTS221']
 
 if roll:
     roll_value = sense.get_orientation()['roll']
-    if u == 'rad': roll_value *= math.pi/180
+    if u == 'rad': roll_value *= math.pi/180.0
     results['roll'] = roll_value
 
 if pitch:
     pitch_value = sense.get_orientation()['pitch']
-    if u == 'rad': pitch_value *= math.pi/180
+    if u == 'rad': pitch_value *= math.pi/180.0
     results['pitch'] = pitch_value
 
 if yaw:
     yaw_value = sense.get_orientation()['yaw']
-    if u == 'rad': yaw_value *= math.pi/180
+    if u == 'rad': yaw_value *= math.pi/180.0
     results['yaw'] = yaw_value
 
+if u != 'None':
+    results['rpyUnit'] = u
+
 if P_unit != 'None':
-    results['pressure unit'] = P_unit
+    results['pressureUnit'] = P_unit
     pressure = sense.get_pressure()
     if P_unit == 'mmHg': pressure *= 0.75
     results['pressure'] = pressure
 
 if T_unit != 'None':
-    results['temperature unit'] = T_unit
+    results['temperatureUnit'] = T_unit
     temperature = sense.get_temperature()
-    if T_unit == 'F': temperature = temperature * 9/5 + 32
+    if T_unit == 'F': temperature = temperature * 1.8 + 32.0
     results['temperature'] = temperature
 
 if H_unit != 'None':
-    results['humidity unit'] = H_unit
+    results['humidityUnit'] = H_unit
     humidity = sense.get_humidity()
-    if H_unit == 'num': humidity /= 100
+    if H_unit == 'num': humidity /= 100.0
     results['humidity'] = humidity
 
 # mock

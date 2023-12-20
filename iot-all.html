@@ -9,8 +9,10 @@
         const xd = {"sensors": ["LPS25h", "LSM9DS1", "HTS221"], "roll": 40, "pitch": 90, "yaw": 20, "rpyUnit": "deg", "pressure": 1023, "temperature": 28, "humidity": 50, "pressureUnit": "hPa", "temperatureUnit": "C", "humidityUnit": "%"}
         // Call when document is ready
         $(function(){
-          var url = 'http://192.168.1.161:8080/led_matrix.php';
-          var sensorUrl = 'http://192.168.1.161:8080/sensor.php';
+          // var url = 'http://192.168.1.161:8080/led_matrix.php';
+          // var sensorUrl = 'http://192.168.1.161:8080/sensor.php';
+          var url = 'http://localhost:8080/led_matrix.php';
+          var sensorUrl = 'http://localhost:8080/sensor.php';
           $('body').html('HTTP get request in background url='+url);    
           // Make HTTP request for IoT device description
           $.get(url, function(data, status){
@@ -46,15 +48,17 @@
                 g = (value & 0x00ff00) >> 8;
                 b = (value & 0x0000ff);
                 
-                url = "http://192.168.1.161:8080/led_matrix.php";
+                // url = "http://192.168.1.161:8080/led_matrix.php";
+                url = "http://localhost:8080/led_matrix.php";
                 $("#feedback").html("User have changed input " + id + " to value equals to " + value + "<br>Request url=" + url);
-                $.post(url, {x: x, y: y, R: r, G: g, B: b}).done(function(data, status){
+                $.post(url, {x: x, y: y, R: r, G: g, B: b}).done(function(data){
                   $("#feedback").append("<br>Server response: "+JSON.stringify(data));
                 });
               });
 
               function fetchSensorData() {
                 $.get(sensorUrl, function(data) {
+                  console.dir(data);
                     var sensorData = JSON.parse(data);
 
 
@@ -69,49 +73,52 @@
                 var temperatureUnit = $('#temperatureUnit').val();
                 var humidityUnit = $('#humidityUnit').val();
                 var pressureUnit = $('#pressureUnit').val();
-
-                $.ajax({
-                    url: sensorUrl, 
-                    method: 'POST',
-                    data: {
+                console.dir({
                         rpyUnit: rpyUnit,
                         temperatureUnit: temperatureUnit,
                         humidityUnit: humidityUnit,
                         pressureUnit: pressureUnit
-                    },
-                    success: function(response) {
-                        var sensorData = JSON.parse(response);
+                    })
+                $.post(sensorUrl,  {
+                        r: true,
+                        p: true,
+                        y: true,
+                        u: rpyUnit,
+                        T: temperatureUnit,
+                        H: humidityUnit,
+                        P: pressureUnit
+                    }).done(function(data, status){
+                      console.dir(data);
+                        var sensorData = JSON.parse(data);
                         $('#roll_pitch_yaw').html('Roll: ' + sensorData.roll + ', Pitch: ' + sensorData.pitch + ', Yaw: ' + sensorData.yaw);
                         $('#temperature').html('Temperature: ' + sensorData.temperature);
                         $('#humidity').html('Humidity: ' + sensorData.humidity);
                         $('#pressure').html('Pressure: ' + sensorData.pressure);
-                    }
                 });
+                // $.ajax({
+                //     url: sensorUrl, 
+                //     method: 'POST',
+                //     data: {
+                //         rpyUnit: rpyUnit,
+                //         temperatureUnit: temperatureUnit,
+                //         humidityUnit: humidityUnit,
+                //         pressureUnit: pressureUnit
+                //     },
+                //     success: function(response) {
+                //         var sensorData = JSON.parse(response);
+                //         $('#roll_pitch_yaw').html('Roll: ' + sensorData.roll + ', Pitch: ' + sensorData.pitch + ', Yaw: ' + sensorData.yaw);
+                //         $('#temperature').html('Temperature: ' + sensorData.temperature);
+                //         $('#humidity').html('Humidity: ' + sensorData.humidity);
+                //         $('#pressure').html('Pressure: ' + sensorData.pressure);
+                //     }
+                // });
             }
-            fetchSensorData();
-            setInterval(fetchSensorData, 5000);
+        
+            // fetchSensorData();
+            // setInterval(fetchSensorData, 50000);
 
-            $("body").append('<div id="roll_pitch_yaw"></div>');
-            $("body").append('<div id="temperature"></div>');
-            $("body").append('<div id="humidity"></div>');
-            $("body").append('<div id="pressure"></div>');
 
-            // Add select inputs for unit conversion
-            // For roll/pitch/yaw
-            $("body").append('<select id="rpyUnit"><option value="deg">deg</option><option value="rad">rad</option></select>');
-
-            // For temperature
-            $("body").append('<select id="temperatureUnit"><option value="C">C</option><option value="F">F</option></select>');
-
-            // For humidity
-            $("body").append('<select id="humidityUnit"><option value="%">%</option><option value="num">num</option></select>');
-
-            // For pressure
-            $("body").append('<select id="pressureUnit"><option value="hPa">hPa</option><option value="mmHg">mmHg</option></select>');
-    
-            $('#rpyUnit, #temperatureUnit, #humidityUnit, #pressureUnit').on('change', updateSensorDataWithUnits);
-
-            updateSensorDataWithUnits();
+            // updateSensorDataWithUnits();
 
               // Add descritpion and input to new node
               new_node.append('<div>LED '+ k +' x: ' + x + " y:" + y + '</div>');
@@ -126,21 +133,32 @@
             }
             // Add DOM to body
             $("body").html(new_main_node);
+            $("body").append('<div id="roll_pitch_yaw"></div>');
+            $("body").append('<div id="temperature"></div>');
+            $("body").append('<div id="humidity"></div>');
+            $("body").append('<div id="pressure"></div>');
+
+            $("body").append('<select id="rpyUnit"><option value="deg">deg</option><option value="rad">rad</option></select>');
+            $("body").append('<select id="temperatureUnit"><option value="C">C</option><option value="F">F</option></select>');
+            $("body").append('<select id="humidityUnit"><option value="%">%</option><option value="num">num</option></select>');
+            $("body").append('<select id="pressureUnit"><option value="hPa">hPa</option><option value="mmHg">mmHg</option></select>');
+            $('#rpyUnit, #temperatureUnit, #humidityUnit, #pressureUnit').on('change', updateSensorDataWithUnits);
+
     
             // Add clear button
             var clear_input = $("<input>",{"id":"clear", "type":"button", "value":"Clear all"});
             clear_input.click(function(){
               $("[id^=LED]").val(0);
-              url = "http://192.168.1.161/lab09.php?&C=true";          
+              url = "http://localhost:8080/led_matrix.php";          
               $("#feedback").html("User have set all inputs to 0.<br>Request url="+url);
-              $.post(url, function(data, status){
+              $.post(url, {C : 1}).done(function(data){
                 $("#feedback").append("<br>Server response: "+JSON.stringify(data));
               });          
             });
             $("body").prepend(clear_input);
             $("body").prepend('<div id="feedback"></div>');
           }); //End of .get
-            }); // End of .ready
+          }); // End of .ready
         </script>
 </head>
 <body>

@@ -1,5 +1,8 @@
 import json
-from sense_hat import SenseHat
+from sense_emu import SenseHat
 
 sense = SenseHat()
-print(json.dumps(sense.get_pixels()))
+result = {}
+result['ledmatrix'] = sense.get_pixels() 
+
+print(json.dumps(result))
