@@ -29,7 +29,7 @@
                 new_row_node = $("<div class='row'>");
     
               // New input
-              var new_node = $("<div class='col'>");
+              var new_node = $("<div class='col w-75 h-75'>");
               r = device_description.ledmatrix[k][0];
               g = device_description.ledmatrix[k][1];
               b = device_description.ledmatrix[k][2];
@@ -48,15 +48,12 @@
                 
                 // url = "http://192.168.1.161:8080/led_matrix.php";
                 url = "http://localhost:8080/led_matrix.php";
-                $("#feedback").html("User have changed input " + id + " to value equals to " + value + "<br>Request url=" + url);
                 $.post(url, {x: x, y: y, R: r, G: g, B: b}).done(function(data){
-                  $("#feedback").append("<br>Server response: "+JSON.stringify(data));
                 });
               });
 
               function fetchSensorData() {
                 $.get(sensorUrl, function(data) {
-                  console.dir(data);
                     var sensorData = JSON.parse(data);
 
 
@@ -86,7 +83,6 @@
                         H: humidityUnit,
                         P: pressureUnit
                     }).done(function(data, status){
-                      console.dir(data);
                         var sensorData = JSON.parse(data);
                         $('#roll_pitch_yaw').html('Roll: ' + sensorData.roll + ', Pitch: ' + sensorData.pitch + ', Yaw: ' + sensorData.yaw);
                         $('#temperature').html('Temperature: ' + sensorData.temperature);
@@ -102,7 +98,7 @@
             // updateSensorDataWithUnits();
 
               // Add descritpion and input to new node
-              new_node.append('<div >LED '+ k +' x: ' + x + " y:" + y + '</div>');
+              // new_node.append('<div></div>');
               new_node.append(new_inputnode);
     
               // Add new node to new row
@@ -120,7 +116,7 @@
             $("body").append('<div id="humidity" class="mt-3"></div>');
             $("body").append('<div id="pressure" class="mt-3"></div>');
 
-            var select_class = "form-control mb-3";
+            var select_class = "form-control mb-3 w-75";
             $("body").append('<select id="rpyUnit" class="' + select_class + '"><option value="deg">deg</option><option value="rad">rad</option></select>');
             $("body").append('<select id="temperatureUnit" class="' + select_class + '"><option value="C">C</option><option value="F">F</option></select>');
             $("body").append('<select id="humidityUnit" class="' + select_class + '"><option value="%">%</option><option value="num">num</option></select>');
@@ -144,8 +140,7 @@
           }); // End of .ready
         </script>
 </head>
-<body>
-    <button class="btn btn-warning">Clear all</button>
+<body class="d-flex align-items-center flex-column" style="padding: 20px">
 </body>
 </html>
 
