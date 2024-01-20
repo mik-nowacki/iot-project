@@ -1,5 +1,6 @@
 import json
-from sense_emu import SenseHat
+# from sense_emu import SenseHat
+from sense_hat import SenseHat
 
 sense = SenseHat()
 result = {}

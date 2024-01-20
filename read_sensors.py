@@ -1,7 +1,7 @@
 import argparse
 import json
-from sense_emu import SenseHat
-# from sense_hat import SenseHat
+# from sense_emu import SenseHat
+from sense_hat import SenseHat
 import math
 
 
